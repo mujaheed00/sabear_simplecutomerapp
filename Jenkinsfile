@@ -1,6 +1,10 @@
 pipeline {
     agent any
 
+    options {
+        skipDefaultCheckout(true)
+    }
+
     tools {
         nodejs 'NodeJS18'
     }
@@ -9,7 +13,7 @@ pipeline {
 
         stage('Checkout') {
             steps {
-                git branch: 'main',
+                git branch: '*/master',
                     url: 'https://github.com/betawins/Trading-UI.git'
             }
         }
@@ -28,7 +32,7 @@ pipeline {
 
         stage('Archive Artifact') {
             steps {
-                archiveArtifacts artifacts: 'build/**', fingerprint: true
+                archiveArtifacts artifacts: 'dist/**', fingerprint: true
             }
         }
     }
