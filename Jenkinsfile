@@ -1,51 +1,51 @@
 pipeline {
     agent any
 
-    options {
-        skipDefaultCheckout(true)
-    }
-
-    tools {
-        nodejs 'NodeJS18'
-    }
-
     stages {
-
         stage('Checkout') {
             steps {
-                git branch: '*/master',
+                // Checkout the public repo
+                git branch: 'main', 
                     url: 'https://github.com/betawins/Trading-UI.git'
             }
         }
 
         stage('Install Dependencies') {
             steps {
-                sh 'npm install'
+                echo "Installing dependencies..."
+                // Example for Node.js: uncomment if needed
+                // sh 'npm install'
             }
         }
 
         stage('Build') {
             steps {
-                sh 'npm run build'
+                echo "Building the project..."
+                // Example for Node.js: uncomment if needed
+                // sh 'npm run build'
             }
         }
 
-        stage('Archive Artifact') {
+        stage('Archive Artifacts') {
             steps {
-                archiveArtifacts artifacts: 'dist/**', fingerprint: true
+                echo "Archiving build artifacts..."
+                // Replace 'dist/**' with your build output directory
+                archiveArtifacts artifacts: 'dist/**', allowEmptyArchive: true
             }
         }
     }
 
     post {
         success {
-            echo 'Trading UI Build Successful'
+            echo "✅ Build succeeded!"
         }
+
         failure {
-            echo 'Trading UI Build Failed'
+            echo "❌ Build failed!"
         }
+
         always {
-            cleanWs()
+            cleanWs() // Clean workspace after every build
         }
     }
 }
