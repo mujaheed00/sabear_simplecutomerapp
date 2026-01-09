@@ -2,50 +2,43 @@ pipeline {
     agent any
 
     tools {
-        jdk 'JDK8'
-        maven 'Maven3'
+        nodejs 'NodeJS18'
     }
 
     stages {
 
         stage('Checkout') {
             steps {
-                git branch: 'feature-1.1',
-                    url: 'https://github.com/betawins/sabear_simplecutomerapp.git'
+                git branch: 'main',
+                    url: 'https://github.com/betawins/Trading-UI.git'
+            }
+        }
+
+        stage('Install Dependencies') {
+            steps {
+                sh 'npm install'
             }
         }
 
         stage('Build') {
             steps {
-                sh 'mvn clean compile'
-            }
-        }
-
-        stage('Test') {
-            steps {
-                sh 'mvn test'
-            }
-        }
-
-        stage('Package') {
-            steps {
-                sh 'mvn package'
+                sh 'npm run build'
             }
         }
 
         stage('Archive Artifact') {
             steps {
-                archiveArtifacts artifacts: 'target/*.war', fingerprint: true
+                archiveArtifacts artifacts: 'build/**', fingerprint: true
             }
         }
     }
 
     post {
         success {
-            echo 'Build completed successfully'
+            echo 'Trading UI Build Successful'
         }
         failure {
-            echo 'Build failed'
+            echo 'Trading UI Build Failed'
         }
         always {
             cleanWs()
