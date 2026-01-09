@@ -2,15 +2,14 @@ pipeline {
     agent any
 
     tools {
-        jdk 'JDK8'         // Must match your configured JDK
-        maven 'Maven3'     // Must match your configured Maven
+        jdk 'JDK8'
+        maven 'Maven3'
     }
 
     stages {
 
         stage('Checkout') {
             steps {
-                echo 'Checking out source...'
                 git branch: 'feature-1.1',
                     url: 'https://github.com/betawins/sabear_simplecutomerapp.git'
             }
@@ -18,38 +17,35 @@ pipeline {
 
         stage('Build') {
             steps {
-                echo 'Building project...'
                 sh 'mvn clean compile'
             }
         }
 
         stage('Test') {
             steps {
-                echo 'Running tests...'
                 sh 'mvn test'
             }
         }
 
         stage('Package') {
             steps {
-                echo 'Packaging...'
                 sh 'mvn package'
             }
         }
 
         stage('Archive Artifact') {
             steps {
-                archiveArtifacts artifacts: 'target/*.jar', fingerprint: true
+                archiveArtifacts artifacts: 'target/*.war', fingerprint: true
             }
         }
     }
 
     post {
         success {
-            echo 'Pipeline completed successfully'
+            echo 'Build completed successfully'
         }
         failure {
-            echo 'Pipeline failed'
+            echo 'Build failed'
         }
         always {
             cleanWs()
